@@ -406,8 +406,8 @@ If {opt e(N_SV)}/{opt e(N)} is close to 100% your fit is inefficient; perhaps yo
 
 {synoptset 20 tabbed}{...}
 {p2col 5 20 24 2: Matrices}({help svmachines##remarks:may be missing}){p_end}
-{synopt:{cmd:e(sv_coef)}}The coefficients of the support vectors for each fitted hyperplane in the {bf:dual} quadratic programming problem.{p_end}
-{* TODO: is there a clearer explanation of sv_coef? Is it worth including? }{...}
+{synopt:{cmd:e(sv_coef)}}The coefficients of the support vectors for each fitted hyperplane in the {bf:dual} quadratic programming problem. 
+Support vectors are only stored if you have less than 11,000 observations or you are using Stata MP.{p_end}
 {synopt:{cmd:e(rho)}}The intercept term for each fitted hyperplane. It is lower-triangular and {cmd:e(N_class)}^2 large, with each entry [i,j] representing the hyperplane between class i and class j.{p_end}
 
 

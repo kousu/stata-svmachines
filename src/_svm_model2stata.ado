@@ -58,6 +58,10 @@ program define _svm_model2stata, eclass
   * Phase 2
   * Allocate Stata matrices and copy the libsvm matrices and vectors
   if(`have_sv_coef'==1 & `e(N_class)'>1 & `e(N_SV)'>0) {
+    // with more than 11000 rows, don't create SV matrix unless you are running Stata MP
+	// This allows running large data sizes in Stata SV, at the small cost of not getting the SV vectors
+    if (e(N_SV)<=11000 | c(MP)==1) {
+	
     capture noisily {
       matrix sv_coef = J(e(N_class)-1,e(N_SV),.)
       
@@ -73,6 +77,7 @@ program define _svm_model2stata, eclass
       //  there is one row per class *less one*. the rows probably represent decision boundaries, then. I'm not sure what this should be labelled.
       // matrix rownames sv_coef = class1..class`e(N_SV)'
     }
+	}
   }
   
   if(`have_rho'==1 & `e(N_class)'>0) {
