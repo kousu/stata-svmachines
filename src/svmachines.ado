@@ -1,7 +1,7 @@
 /* svmachines: the entry point to the support vector fitting algorithm */
 
 program define svmachines
-*! version 1.2.0
+*! version 1.2.1 June 2020
   version 13
   
   //plugin call does not handle factor variables.
@@ -12,3 +12,5 @@ program define svmachines
   // which means the pure Stata must be in a *separate file* (_svm_train.ado).
   xi: _svm_train `0'        
 end
+// Version History
+//*! version 1.2.1 June 2020 Predictions vars take the same type as y. If y is int/byte/double, this was a problem for regression.

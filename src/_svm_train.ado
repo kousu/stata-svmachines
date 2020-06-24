@@ -124,6 +124,16 @@ program define _svm_train, eclass
     }
 	*/
   }
+  if("`type'" == "SVR" |  "`type'" == "NU_SVR") {
+	// "ensure" type is float or double 
+    local T : type `depvar'
+	if "`T'"=="byte" | "`T'"=="int" | "`T'"=="long" { 
+		di `"Your dependent variable is of type "`T'". "'  ///
+		 "The prediction variable will take the same type. "  ///
+		 `"To allow for continuous predictions, your dependent variable "`depvar'" has been recast to type "double" "'
+		recast double `depvar'
+	}
+  }
 
   if(`probability'==1) {
     // ensure model is a classification
