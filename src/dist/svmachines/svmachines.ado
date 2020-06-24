@@ -1,7 +1,7 @@
 /* svmachines: the entry point to the support vector fitting algorithm */
 
 program define svmachines
-*! version 1.1.0
+*! version 1.2.0
   version 13
   
   //plugin call does not handle factor variables.
