@@ -13,5 +13,5 @@ program define svmachines
   xi: _svm_train `0'        
 end
 // Version History
-// version 1.2.2 _svm_model2stata.ado: only saving support vectors up to size 11,000 unless Stata MP is used
-// version 1.2.1 Predictions vars take the same type as y. If y is int/byte/double, this was a problem for regression.
+// version 1.2.2 Aug 2021, _svm_model2stata.ado: only saving support vectors up to size 11,000 unless Stata MP is used
+// version 1.2.1 June 2020, Predictions vars take the same type as y. If y is int/byte/double, this was a problem for regression.
