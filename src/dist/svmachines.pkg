@@ -10,7 +10,10 @@ d for the widely deployed libsvm.
 d
 d Nick Guenther <nguenthe@uwaterloo.ca> and Matthias Schonlau <schonlau@uwaterloo.ca>
 d
-d Distribution-Date: 20200625
+d Comment on .pkg file:  WIN64A OS was used in Stata 13 and is supplanted by WIN64 as for Stata14 or 15.
+d  For backward compatibility, we list both
+d
+d Distribution-Date: 20210825
 
 f svmachines/_svm_model2stata.ado
 f svmachines/_svm_train.ado
