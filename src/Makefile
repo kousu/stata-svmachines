@@ -89,7 +89,8 @@ ifneq ($(OS),Windows_NT)
   OS:=$(shell uname -s)
   ARCH:=$(shell uname -m)
 endif
-
+$(info    OS is $(OS))
+$(info    ARCH is $(ARCH))
 
 ifeq ($(wildcard $(OS).mk),)
   $(error "Unsupported OS '$(OS)'")
@@ -114,7 +115,12 @@ include $(OS).mk
 ifeq ($(OS),Windows_NT)
   PLATFORM:=WIN
 else ifeq ($(OS),Darwin)
-  PLATFORM:=MACINTEL
+	# add support for arm64 MAC
+	ifeq ($(ARCH),arm64)
+		PLATFORM:=MACARM64
+	else
+		PLATFORM:=MACINTEL
+	endif
 else
   PLATFORM:=LINUX
 endif
@@ -142,6 +148,18 @@ bin/$(PLATFORM)/_svmachines.plugin: bin/$(PLATFORM)/libsvm.dll
 endif
 
 
+ifeq ($(OS),Darwin)
+
+bin/$(PLATFORM)/libsvm.dylib: macos/$(ARCH)/libsvm.dylib
+	@$(MKDIR) $(call FixPath,$(dir $@)) 2>$(NULL) || echo >$(NULL)
+	$(LN) $(call FixPath,$<) $(call FixPath,$@)
+
+# specific dist dependencies
+# 1) _svmachines.plugin depends on libsvm
+bin/$(PLATFORM)/_svmachines.plugin: bin/$(PLATFORM)/libsvm.dylib
+endif
+
+
 ifeq ($(wildcard bin/$(PLATFORM)),)
 # if bin/ does not not exist for the current platform
 # we need to do a fresh build
@@ -163,7 +181,6 @@ endif
 # --- rules ---
 
 
-
 # Stata uses consistent naming across platforms for library files, loading anything ending in ".plugin" with the platform's particular version of dlopen()
 # even if the platforms don't, so we can have a shared target
 # TODO: do platform-specific builds under build/$(OS)/$(ARCH)/ (and then link or copy the final result to ./svm.plugin)
@@ -183,7 +200,7 @@ bin/$(PLATFORM)/%.plugin: %.$(DLLEXT)
 	@$(MKDIR) $(call FixPath,$(dir $@)) 2>$(NULL) || echo >$(NULL)
 	$(LN) $(call FixPath,$<) $(call FixPath,$@)
 
-	
+
 # append the dependencies for which belong to each specific plugin
 # You'd think you could make a single pattern rule %.$(DLLEXT): %.$(OBJEXT)
 #  but attach more dependencies to specific cases as needed

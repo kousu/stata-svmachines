@@ -1,4 +1,5 @@
 * predict_oneclass.do
+clear
 sysuse auto
 replace foreign = 3 if _n < 10
 replace foreign = 4 if _n > 10 & _n < 20

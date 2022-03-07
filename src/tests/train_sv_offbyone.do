@@ -1,5 +1,6 @@
 // there's an off-by-one-ish bug in the new exporting SVs code, 
 // this code triggers it
+clear
 sysuse auto
 drop make
 order gear_ratio

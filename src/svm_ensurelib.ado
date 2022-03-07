@@ -170,8 +170,15 @@ program define _ensurelib
     // skip prepending if adopath is already there in `libvar', to prevent explosion
     local k = ustrpos("`libpath'", "`adopath'")
     if(`k' == 0) {
+    // bundle libsvm.dylib to macOS and figure out the dependency of _svmachines.plugin on the first run
+      if("`c(os)'"=="MacOSX"){
+         plugin call _svm_setenv, "install_name_tool -change libsvm.dylib" "`adopath'/libsvm.dylib" "`adopath'/../_/_svmachines.plugin"
+      }
       // prepend
       plugin call _svm_setenv, "`libvar'" "`adopath'`sep'`libpath'"
+    }
+    if("`c(os)'"=="MacOSX") {
+	local lib = "`adopath'/`dlprefix'`libname'.`dlext'"
     }
   }
   /* Check that the library is now loadable */

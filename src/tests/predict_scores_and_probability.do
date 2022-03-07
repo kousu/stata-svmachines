@@ -1,5 +1,5 @@
 * predict_scores_and_probability.do
-
+clear
 sysuse auto
 svmachines foreign price-gear_ratio if !missing(rep78), prob
 predict P1, prob

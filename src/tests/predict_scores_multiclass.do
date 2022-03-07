@@ -1,6 +1,6 @@
 * predict_scores_multiclass
 * like predict_scores, but this exercises the complicated triangular label matrix code by making sure there's more than one pair
-
+clear
 sysuse auto
 label define origin 2 "Dodge", add
 label define origin 3 "Buick", add

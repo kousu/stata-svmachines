@@ -5,6 +5,7 @@
 #include <string.h>
 #include "stplugin.h"
 #include "stutil.h"
+#include "string.h"
 
 #ifdef _WIN32
 
@@ -55,7 +56,18 @@ STDLL stata_call(int argc, char *argv[])
         sterror("_setenv: unable to write %s=%s: %s\n", argv[0], argv[1], strerror(err));
         return err;
       }
-    } else {
+        
+    }
+    else if(argc == 3) {
+        char buffer[512];
+
+        snprintf(buffer, sizeof buffer, "%s \"%s\" \"%s\"",argv[0],argv[1],argv[2]);
+        int err = system(buffer);
+        if (err != 0){
+            sterror("_setenv: unable to change link path for _svmachines.plugin");
+        }
+    }
+     else {
         sterror("_setenv: incorrect number of arguments (%d), can only 1 or 2\n", argc);
         return 1;
     }

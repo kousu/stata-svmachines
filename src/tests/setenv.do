@@ -4,6 +4,7 @@ di "First: mQQ=`mQQ'"
 // the \$ quotes the $, because otherwise Stata, apparently, tries to interpret it
 !echo And the shell says: \$QQ
 
+capture program drop _svm_setenv
 program _svm_setenv, plugin
 plugin call _svm_setenv, QQ "hello me hearties"
 

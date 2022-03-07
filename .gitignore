@@ -17,8 +17,10 @@
 
 #note: some dlls might end up getting committed (git add -f!), at least temporarily, just to make progress on OS X and Windows faster
 # in the long run, we should be dynamically building or at least retrieving libraries, not keeping personal copies around.
+
+# add on March 2022, we decided to bundle libsvm.dylib to Macos so remove .dylib
 *.so
-*.dylib
+#*.dylib
 *.dll
 
 *.lib

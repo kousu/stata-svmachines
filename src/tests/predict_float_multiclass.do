@@ -1,4 +1,5 @@
 * train.do
+clear
 sysuse auto
 
 drop make
@@ -6,7 +7,7 @@ order headroom // headroom is a floating point variable but comes in .5-incremen
 
 svmachines * if !missing(rep78), sv(SV)
 list SV
-do tests/helpers/inspect_model.do
+do ./helpers/inspect_model.do
 
 predict Q
 list `e(depvar)' Q

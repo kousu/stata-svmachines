@@ -25,6 +25,8 @@ CFLAGS+=-DSYSTEM=APPLEMAC	#the Stata Programming Interface (i.e. stplugin.h) nam
 CFLAGS+=-std=c99 #arrrrgh, this should be the default
 
 LDFLAGS+=-bundle
+ARCH:=$(shell uname -m)
+LDFLAGS+=-Lmacos/$(ARCH)
 
 
 # the complicated install_name_tool line takes everything in LIBS and rewrites them with as a filename; this means that LD_LIBRARY_PATH and DYLD_LIBRARY_PATH will be searched at runtime for this library. This goes against the OS X conventions, but the OS X conventions don't understand package management.
@@ -34,7 +36,7 @@ LDFLAGS+=-bundle
 
 %.dylib: %.so
 	$(CP) $< $@
-	$(foreach L,$(LIBS),ABS=$$(otool -L $@ | tail -n +2 | grep $L | cut -f 1 -d " ") && install_name_tool -change $$ABS $$(basename $$ABS) $@ &&) true
+	$(foreach L,$(LIBS),ABS=$$(otool -L $@ | tail -n +2 | grep $L | cut -f 1 -d " ") && install_name_tool -change $$ABS libsvm.dylib $@ &&) true
 
 # --- testing ---
 

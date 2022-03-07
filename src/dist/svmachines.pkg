@@ -38,6 +38,13 @@ G MACINTEL64 svmachines/bin/MACINTEL64/_svm_getenv.plugin
 G MACINTEL64 svmachines/bin/MACINTEL64/_svm_setenv.plugin
 G MACINTEL64 svmachines/bin/MACINTEL64/_svmachines.plugin
 G MACINTEL64 svmachines/bin/MACINTEL64/_svmlight.plugin
+G MACINTEL64 svmachines/bin/MACINTEL64/libsvm.dylib
+G MACARM64 svmachines/bin/MACARM64/_svm_dlopenable.plugin
+G MACARM64 svmachines/bin/MACARM64/_svm_getenv.plugin
+G MACARM64 svmachines/bin/MACARM64/_svm_setenv.plugin
+G MACARM64 svmachines/bin/MACARM64/_svmachines.plugin
+G MACARM64 svmachines/bin/MACARM64/_svmlight.plugin
+G MACARM64 svmachines/bin/MACARM64/libsvm.dylib
 G WIN64 svmachines/bin/WIN64A/_svm_dlopenable.plugin
 G WIN64 svmachines/bin/WIN64A/_svm_getenv.plugin
 G WIN64 svmachines/bin/WIN64A/_svm_setenv.plugin

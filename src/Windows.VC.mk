@@ -22,6 +22,7 @@ CC:=cl /nologo
 
 # Windows doesn't have uname; instead we have to check the variable set by vcvarsall.bat to figure out what arch we're building for
 # the *output* here *is* in posix uname -m format, though.
+$(info    Platform is $(Platform))
 ifeq ($(Platform),X64) #VS 64 bit native compiler ("amd64")
   ARCH:=x86_64
 else ifeq ($(Platform),x64) #VS 32-to-64 bit cross compiler ("x86_amd64")

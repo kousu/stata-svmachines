@@ -1,7 +1,7 @@
 // ethyl acrylate data , Bates and Watts, A1.10
 
 clear 
-import excel using "tests/ethyl.xlsx", firstrow
+import excel using "./ethyl.xlsx", firstrow
 gen viscosity = exp(ln_viscosity)
 
 set seed 100
