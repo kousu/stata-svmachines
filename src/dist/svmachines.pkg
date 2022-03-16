@@ -28,35 +28,35 @@ f svmachines/svmachines.ado
 f svmachines/svmachines.sthlp
 f svmachines/svmachines_example.ado
 f svmachines/svmlight.sthlp
-G LINUX64 svmachines/bin/LINUX64/_svm_dlopenable.plugin
-G LINUX64 svmachines/bin/LINUX64/_svm_getenv.plugin
-G LINUX64 svmachines/bin/LINUX64/_svm_setenv.plugin
-G LINUX64 svmachines/bin/LINUX64/_svmachines.plugin
-G LINUX64 svmachines/bin/LINUX64/_svmlight.plugin
-G MACINTEL64 svmachines/bin/MACINTEL64/_svm_dlopenable.plugin
-G MACINTEL64 svmachines/bin/MACINTEL64/_svm_getenv.plugin
-G MACINTEL64 svmachines/bin/MACINTEL64/_svm_setenv.plugin
-G MACINTEL64 svmachines/bin/MACINTEL64/_svmachines.plugin
-G MACINTEL64 svmachines/bin/MACINTEL64/_svmlight.plugin
-G MACINTEL64 svmachines/bin/MACINTEL64/libsvm.dylib
-G MACARM64 svmachines/bin/MACARM64/_svm_dlopenable.plugin
-G MACARM64 svmachines/bin/MACARM64/_svm_getenv.plugin
-G MACARM64 svmachines/bin/MACARM64/_svm_setenv.plugin
-G MACARM64 svmachines/bin/MACARM64/_svmachines.plugin
-G MACARM64 svmachines/bin/MACARM64/_svmlight.plugin
-G MACARM64 svmachines/bin/MACARM64/libsvm.dylib
-G WIN64 svmachines/bin/WIN64A/_svm_dlopenable.plugin
-G WIN64 svmachines/bin/WIN64A/_svm_getenv.plugin
-G WIN64 svmachines/bin/WIN64A/_svm_setenv.plugin
-G WIN64 svmachines/bin/WIN64A/_svmachines.plugin
-G WIN64 svmachines/bin/WIN64A/_svmlight.plugin
-G WIN64A svmachines/bin/WIN64A/libsvm.dll
-G WIN64A svmachines/bin/WIN64A/_svm_dlopenable.plugin
-G WIN64A svmachines/bin/WIN64A/_svm_getenv.plugin
-G WIN64A svmachines/bin/WIN64A/_svm_setenv.plugin
-G WIN64A svmachines/bin/WIN64A/_svmachines.plugin
-G WIN64A svmachines/bin/WIN64A/_svmlight.plugin
-G WIN64A svmachines/bin/WIN64A/libsvm.dll
+G LINUX64 svmachines/_svm_dlopenable_LINUX64.plugin _svm_dlopenable.plugin
+G LINUX64 svmachines/_svm_getenv_LINUX64.plugin _svm_getenv.plugin
+G LINUX64 svmachines/_svm_setenv_LINUX64.plugin _svm_setenv.plugin
+G LINUX64 svmachines/_svmachines_LINUX64.plugin _svmachines.plugin
+G LINUX64 svmachines/_svmlight_LINUX64.plugin _svmlight.plugin
+G MACINTEL64 svmachines/_svm_dlopenable_MACINTEL64.plugin _svm_dlopenable.plugin
+G MACINTEL64 svmachines/_svm_getenv_MACINTEL64.plugin _svm_getenv.plugin
+G MACINTEL64 svmachines/_svm_setenv_MACINTEL64.plugin _svm_setenv.plugin
+G MACINTEL64 svmachines/_svmachines_MACINTEL64.plugin _svmachines.plugin
+G MACINTEL64 svmachines/_svmlight_MACINTEL64.plugin _svmlight.plugin
+G MACINTEL64 svmachines/libsvm_MACINTEL64.dylib libsvm.dylib
+G MACARM64 svmachines/_svm_dlopenable_MACARM64.plugin _svm_dlopenable.plugin
+G MACARM64 svmachines/_svm_getenv_MACARM64.plugin _svm_getenv.plugin
+G MACARM64 svmachines/_svm_setenv_MACARM64.plugin _svm_setenv.plugin
+G MACARM64 svmachines/_svmachines_MACARM64.plugin _svmachines.plugin
+G MACARM64 svmachines/_svmlight_MACARM64.plugin _svmlight.plugin
+G MACARM64 svmachines/libsvm_MACARM64.dylib libsvm.dylib
+G WIN64 svmachines/_svm_dlopenable_WIN64A.plugin _svm_dlopenable.plugin
+G WIN64 svmachines/_svm_getenv_WIN64A.plugin _svm_getenv.plugin
+G WIN64 svmachines/_svm_setenv_WIN64A.plugin _svm_setenv.plugin
+G WIN64 svmachines/_svmachines_WIN64A.plugin _svmachines.plugin
+G WIN64 svmachines/_svmlight_WIN64A.plugin _svmlight.plugin
+G WIN64 svmachines/libsvm_WIN64A.dll libsvm.dll
+G WIN64A svmachines/_svm_dlopenable_WIN64A.plugin _svm_dlopenable.plugin
+G WIN64A svmachines/_svm_getenv_WIN64A.plugin _svm_getenv.plugin
+G WIN64A svmachines/_svm_setenv_WIN64A.plugin _svm_setenv.plugin
+G WIN64A svmachines/_svmachines_WIN64A.plugin _svmachines.plugin
+G WIN64A svmachines/_svmlight_WIN64A.plugin _svmlight.plugin
+G WIN64A svmachines/libsvm_WIN64A.dll libsvm.dll
 h _svm_dlopenable.plugin
 h _svm_getenv.plugin
 h _svm_setenv.plugin
