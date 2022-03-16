@@ -200,7 +200,7 @@ program define test_svmachines
 	
 	if (`all_pass_flag' == 1){
 		clear
-		di "All tests passed"
+		di "If there were no error messages above, then all tests passed"
 	}
 	
 end
