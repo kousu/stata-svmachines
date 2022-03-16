@@ -1,0 +1,69 @@
+v 3
+d svmachines
+d Support Vector Machines for both Classification and Regression
+d
+d Support vector machines (SVM) refers to supervised algorithms 
+d for statistical machine learning.  This accommodates both 
+d classification and regression as well as the “nu” variant 
+d for classification and regression. This package is a thin wrapper 
+d for the widely deployed libsvm.
+d
+d Nick Guenther <nguenthe@uwaterloo.ca> and Matthias Schonlau <schonlau@uwaterloo.ca>
+d
+d Comment on .pkg file:  WIN64A OS was used in Stata 13 and is supplanted by WIN64 as for Stata14 or 15.
+d  For backward compatibility, we list both
+d
+d Distribution-Date: 20220316
+
+f ../_/_svm_model2stata.ado
+f ../_/_svm_train.ado
+f ../e/export_svmlight.ado
+f ../e/export_svmlight.sthlp
+f ../i/import_svmlight.ado
+f ../i/import_svmlight.sthlp
+f ../s/svm_ensurelib.ado
+f ../s/svm_examples.ihlp
+f ../s/svm_predict.ado
+f ../s/svmachines.ado
+f ../s/svmachines.sthlp
+f ../s/svmachines_example.ado
+f ../s/svmlight.sthlp
+G LINUX64 ../_/_svm_dlopenable_LINUX64.plugin _svm_dlopenable.plugin
+G LINUX64 ../_/_svm_getenv_LINUX64.plugin _svm_getenv.plugin
+G LINUX64 ../_/_svm_setenv_LINUX64.plugin _svm_setenv.plugin
+G LINUX64 ../_/_svmachines_LINUX64.plugin _svmachines.plugin
+G LINUX64 ../_/_svmlight_LINUX64.plugin _svmlight.plugin
+G MACINTEL64 ../_/_svm_dlopenable_MACINTEL64.plugin _svm_dlopenable.plugin
+G MACINTEL64 ../_/_svm_getenv_MACINTEL64.plugin _svm_getenv.plugin
+G MACINTEL64 ../_/_svm_setenv_MACINTEL64.plugin _svm_setenv.plugin
+G MACINTEL64 ../_/_svmachines_MACINTEL64.plugin _svmachines.plugin
+G MACINTEL64 ../_/_svmlight_MACINTEL64.plugin _svmlight.plugin
+G MACINTEL64 ../l/libsvm_MACINTEL64.dylib libsvm.dylib
+G MACARM64 ../_/_svm_dlopenable_MACARM64.plugin _svm_dlopenable.plugin
+G MACARM64 ../_/_svm_getenv_MACARM64.plugin _svm_getenv.plugin
+G MACARM64 ../_/_svm_setenv_MACARM64.plugin _svm_setenv.plugin
+G MACARM64 ../_/_svmachines_MACARM64.plugin _svmachines.plugin
+G MACARM64 ../_/_svmlight_MACARM64.plugin _svmlight.plugin
+G MACARM64 ../l/libsvm_MACARM64.dylib libsvm.dylib
+G WIN64 ../_/_svm_dlopenable_WIN64A.plugin _svm_dlopenable.plugin
+G WIN64 ../_/_svm_getenv_WIN64A.plugin _svm_getenv.plugin
+G WIN64 ../_/_svm_setenv_WIN64A.plugin _svm_setenv.plugin
+G WIN64 ../_/_svmachines_WIN64A.plugin _svmachines.plugin
+G WIN64 ../_/_svmlight_WIN64A.plugin _svmlight.plugin
+G WIN64 ../l/libsvm_WIN64A.dll libsvm.dll
+G WIN64A ../_/_svm_dlopenable_WIN64A.plugin _svm_dlopenable.plugin
+G WIN64A ../_/_svm_getenv_WIN64A.plugin _svm_getenv.plugin
+G WIN64A ../_/_svm_setenv_WIN64A.plugin _svm_setenv.plugin
+G WIN64A ../_/_svmachines_WIN64A.plugin _svmachines.plugin
+G WIN64A ../_/_svmlight_WIN64A.plugin _svmlight.plugin
+G WIN64A ../l/libsvm_WIN64A.dll libsvm.dll
+h _svm_dlopenable.plugin
+h _svm_getenv.plugin
+h _svm_setenv.plugin
+h _svmachines.plugin
+h _svmlight.plugin
+f ../a/attitude_indicators.dta
+f ../s/svm_binary_classification_example.do
+f ../s/svm_class_probability_example.do
+f ../s/svm_multiclass_classification_example.do
+f ../s/svm_regression_example.do
