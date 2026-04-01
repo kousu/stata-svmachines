@@ -23,19 +23,14 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get install -y libsvm-dev
 
-      - name: Install libsvm (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          brew install libsvm
-          echo "CPATH=$(brew --prefix libsvm)/include" >> $GITHUB_ENV
-          echo "LIBRARY_PATH=$(brew --prefix libsvm)/lib" >> $GITHUB_ENV
-
       - name: Set up MSYS2 with MinGW (Windows)
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
-          install: make mingw-w64-x86_64-gcc
+          install: |
+            make
+            mingw-w64-x86_64-gcc
 
       - name: Build
         if: runner.os != 'Windows'

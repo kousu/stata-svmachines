@@ -12,7 +12,6 @@ include posix.mk
 # - is this a time for recurisve make?
 _svmachines.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT),_svmachines.c sttrampoline.c stutil.c stplugin.c)
 _svmachines.$(DLLEXT): libsvm_patches.$(OBJEXT)
-_svmachines.$(DLLEXT): LIBS += svm
 _svmlight.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT),_svmlight.c sttrampoline.c stutil.c stplugin.c)
 _svm_getenv.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT),_svm_getenv.c stutil.c stplugin.c)
 _svm_setenv.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT),_svm_setenv.c stutil.c stplugin.c)
@@ -34,7 +33,7 @@ LDFLAGS+=-bundle
 
 %.dylib: %.so
 	$(CP) $< $@
-	$(foreach L,$(LIBS),ABS=$$(otool -L $@ | tail -n +2 | grep $L | cut -f 1 -d " ") && install_name_tool -change $$ABS $$(basename $$ABS) $@ &&) true
+	$(foreach L,$(LIBS),ABS=$$(otool -L $@ | tail -n +2 | grep $L | cut -f 1 -d " "); [ -z "$$ABS" ] || install_name_tool -change $$ABS $$(basename $$ABS) $@;) true
 
 # --- testing ---
 
@@ -45,7 +44,7 @@ printdeps:
 # --- cleaning ---
 
 .PHONY: clean-darwin
-clean-darwin:  clean-posix
+clean-darwin: clean-posix
 	-$(RM) *.dylib
 
 clean: clean-darwin

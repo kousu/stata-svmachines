@@ -10,7 +10,10 @@ FixPath = $(subst /,\,$1)
 # platform config
 DLLEXT:=dll
 
-# the common testing code is written POSIXey; these variables glue POSIX shell into the DOS shell, more or less.
+# Under MSYS2, use *nix tools.
+# But if not under MSYS2, substitute Windows equivalents.
+#
+ifndef MSYSTEM
 ifndef LN #XXX assuming that this missing means all are missing
 WHICH:=where
 NULL:=NUL
@@ -22,7 +25,6 @@ CP:=copy /Y 2>NUL
 MKDIR:=mkdir
 LN:=$(CP)  #Windows doesn't have reliable hard links (NTFS does, but you know), so instead of linking just duplicate.
 endif
-
 # 'del', 'type' and so on are are DOS builtins and, unlike POSIX, they are *only builtins* (there is no /bin/[ on Windows),
 # so we must run them via cmd, either by prefixing them with `cmd /c` or, more simply, enforcing which shell make uses.
 # forcing the shell also gets around the problem that bash, which comes with Cygwin/Cmder, gets confused on spaces in program paths
@@ -31,6 +33,7 @@ endif
 # "However, on MS-DOS and MS-Windows the value of SHELL in the environment is used, since on those systems most users do not set this variable, and therefore it is most likely set specifically to be used by make. On MS-DOS, if the setting of SHELL is not suitable for make, you can set the variable MAKESHELL to the shell that make should use; if set it will be used as the shell instead of the value of SHELL."
 # - <http://www.gnu.org/software/make/manual/make.html#Choosing-the-Shell>
 SHELL := cmd
+endif
 
 
 
