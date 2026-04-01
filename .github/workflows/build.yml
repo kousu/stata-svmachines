@@ -3,6 +3,7 @@ name: Build
 on:
   push:
     branches: ["master"]
+    tags: ["*"]
   pull_request:
 
 env:
@@ -56,6 +57,8 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v6
@@ -77,3 +80,10 @@ jobs:
           name: svmachines
           path: svmachines.zip
           archive: false
+
+      - name: Draft GitHub release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          files: svmachines.zip
