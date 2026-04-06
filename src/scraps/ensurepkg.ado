@@ -21,7 +21,6 @@
  * ensurepkg norm                                     // Ansari & Mussida normalization subroutine
  * ensurepkg psid, pkg(psidtools)                     // Kohler's panel income data API
  * ensurepkg boost, from("http://schonlau.net/stata") // Schonlau's machine learning boosting library
- * ensurepkg _getenv.plugin, pkg(env)                 // Guenther's environment accessors
  * program define example {
  *   ...
  *   norm x

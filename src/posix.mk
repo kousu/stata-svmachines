@@ -29,8 +29,7 @@ CFLAGS+=-Wall -Werror
 
 # strange, make comes with .LIBPATTERNS yet doesn't come with rules for actually making .so files
 %.$(DLLEXT):
-	$(CC) $(LDFLAGS) $^  -o $@  $(foreach L,$(LIBS),-l$L)
-
+	$(CXX) $(LDFLAGS) $^  -o $@  $(LDLIBS) $(foreach L,$(LIBS),-l$L)
 
 #svm.plugin: $(OS)/$(ARCH)/svm.plugin
 

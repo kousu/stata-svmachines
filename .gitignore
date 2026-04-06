@@ -8,9 +8,11 @@
 /paper
 /paper.nick
 
-# avoid committing build products 
-# //comment out Tiancheng July 2018. This makes it easier to move plugins cross platform in a temporary directory. 
-#*.plugin
+# vendored dependencies built from source
+src/libsvm/
+
+# avoid committing build products
+*.plugin
 
 *.o
 *.obj
