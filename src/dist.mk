@@ -1,91 +1,60 @@
 # --- Distribution ---
-# This section 
+#
 # Two main targets:
-#   release - zips up the source
 #   dist    - collects and creates the files necessary for an online Stata repo
 #     unfortunately, because it is impossible to do all the building on one machine,
 #     this only collects whatever it finds. You will need to manually merge the various builds.
+#   package - zips up the source
 
-DEPLOY_HOST:=csclub.uwaterloo.ca
-DEPLOY_PATH:=www/stata
+## 'make dist':
 
-$(call FixPath,../statasvm.%):
-#at this writing, git doesn't let you say ".." as a path: it thinks it's "out of the repository", so instead we cd and hardcode the filename
-	cd .. && git archive --format=$* -o $(dir $@) HEAD
-
-ifndef RELEASE_FORMAT
-  RELEASE_FORMAT:=zip
-endif
-.PHONY: release
-release: ../$(PKG).$(RELEASE_FORMAT)
-
-
-../$(PKG).zip: pkg
-	(cd dist && zip -r ../../svmachines.zip .)
-	@echo " "
-	@echo "--------------------------------------------------------------------------"
-	@echo release has been constructed.  Was your repository clean before you did this?
-	@echo         DOUBLE CHECK THAT IT CONTAINS WHAT YOU INTEND TO SUBMIT.
-	@echo "--------------------------------------------------------------------------"
-
-# compute the list of files
+# scan the list of files to distribute and aim them at dist/$(PKG).
 # note: this is somewhat loose: it grabs EVERYTHING in certain folders
 DIST:=$(wildcard *.ado *.sthlp *.ihlp bin/*/* ancillary/*)
 DIST:=$(patsubst %,dist/$(PKG)/%,$(DIST))
+DIST+=dist/$(PKG).pkg dist/stata.toc
 #$(info DIST=$(DIST)) #DEBUG
-_dist: $(DIST)
-# this splitting + recursive make weirdness is because $(wildcard) needs to get evaluated *after*
-# the build has happened, but all $(wildcard)s are eval'd at Makefile-scan time, not Makefile-exec time
-dist: all
-	$(MAKE) _dist
+dist: $(DIST)
 
-# copy listed files into the distribution directory
+# actually copy listed files into the distribution directory
 dist/$(PKG)/%: %
-#	# make does not have any way to specify "subdirectories depend on parent directories",
-#	# so recursive make is the only way to go. || echo is a cross-platform NOP, like || true,
-#	# which is to silence the error that comes if the directory already exists which is, again,
-#	# because it's easier than figuring out a cross-platform "if [ -d ... ]"
 	$(MKDIR) $(call FixPath,$(dir $@))
 	$(CP) $(call FixPath,$<) $(call FixPath,$@)
 
-
-pkg: dist dist/$(PKG).pkg dist/stata.toc
-
+# special cases: stata.toc and $(PKG).pkg
 ifneq ($(OS),Windows_NT)
  # These scripts don't work under Windows, so simply don't define them on Windows
 .PHONY: dist/stata.toc
-dist/stata.toc: ../scripts/maketoc dist
+dist/stata.toc: ../scripts/maketoc
+	$(MKDIR) $(dir $@)
 	"$<" $(dir $@) "$(DESCRIPTION)"
 dist/stata.toc: DESCRIPTION:=Stata repo
 
 .PHONY: dist/$(PKG).pkg
-dist/$(PKG).pkg: ../scripts/makepluginpkg dist
+dist/$(PKG).pkg: ../scripts/makepluginpkg
+	$(MKDIR) $(dir $@)
 	"$<" "$@" "$(DESCRIPTION)" "$(AUTHOR)"
 endif
 
-.PHONY: collect
-collect: dist
-	@echo 'make collect' is meant to be run VM->Mac Mini build host.
-	@echo It collects the platform-specific parts into one place.
-	-ssh 10.0.2.2 mkdir -p statasvm/src/bin/
-	scp -r bin/$(PLATFORM) 10.0.2.2:statasvm/src/bin/
-	
-# quick hack: deploy to my personal account
-# this puts up a Stata repo so that
-# .net from http://csclub.uwaterloo.ca/~$USER/stata/
-# works
-# This can probably be massaged into something more reasonable
-# Of course, proper deployment means publishing in the Stata journal and a posting to the SSC
-# which is not something that can be automated.
-.PHONY: deploy
-deploy: pkg
-	find dist/ -type d -exec chmod 755 {} \;
-	find dist/ -type f -exec chmod 644 {} \;
-	rsync -e ssh -av --progress --delete dist/ $(DEPLOY_HOST):$(DEPLOY_PATH)
+## 'make package'
+
+ifndef PACKAGE_FORMAT
+  PACKAGE_FORMAT:=zip
+endif
+.PHONY: package
+package: ../$(PKG).$(PACKAGE_FORMAT)
+
+../svmachines.zip: $(DIST)
+	(cd dist && zip -r ../../svmachines.zip .)
+	@echo " "
+	@echo "--------------------------------------------------------------------------"
+	@echo package has been constructed.  Was your repository clean before you did this?
+	@echo         DOUBLE CHECK THAT IT CONTAINS WHAT YOU INTEND TO SUBMIT.
+	@echo "--------------------------------------------------------------------------"
 
 
 # --- cleaning ---
-dist-clean: clean
+clean: dist-clean
 
 .PHONY: dist-clean
 dist-clean:

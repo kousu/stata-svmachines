@@ -190,68 +190,20 @@ The "replace" option will report only those files it discovered needed updating,
 
 
 
-Deployment
-----------
+Packaging
+---------
 
-`make release` automates, as much as possible, creating a multiplatform Stata .pkg.
-The package is likely to install in subtly wrong ways if the .pkg file is malformed, so use the automated method.
+Packaging is:
 
-`make release` uses other make targets as subroutines.
-It first runs `make dist` which takes `.ado`s and `.sthlp`s in `./` along with everything in `bin/`, and `ancillary/`, and places them into `dist/`.
-(`ancillary/` is for ancillary files---ones which will not get installed with `. net install svm` but can optionally be pulled *to the working directory* with `. net get svm`; it could contain, for example, datasets (.csv, .dta, .svmlight) and example code (.do)).
-Then `make pkg` scans and constructs `dist/svm.pkg` and `dist/stata.toc` from `dist/`.
-`make release` finally puts this all into a zip file.
+1. running `make dist` on each _supported platform_
+2. merging the outputs onto a single machine (using rsync, sftp, thumbdrives, etc)
+3. `make package`
 
-We do not have a cross-platform build bot available, so there is a manual process needed to do a complete (i.e. cross-platform) distribution.
-We've attempted to make the chance for error minimal, and this only needs to be done for releases, never for just developing.
-The goal this processes is to synchronize the code on all machines, build it,
-and eventually collect the platform-specific pieces into *the same* `bin/` folder, each platform under `bin/<platform>/`,
-*before* running `make pkg`, so that it can pick them up and index everything into the .pkg file.
-Notice that if you are only testing one platform, you just need to run `make pkg` locally instead of this complication.
+The end result is `svmachines.zip` in the root of the repo. Shared and unzipped,
+a user can `net from file://path/to/svmachines/` then `net describe svmachines`.
 
-Process:
+The build is run on Github Actions, so releases should mostly be automatic.
+To produce a release, `git tag` and push -- it will show up in the releases
+tab if all went well.
 
-* Make sure the tree is clean of scrap .ado or backup files, to avoid cruft getting pulled in accidentally; `make dist` is intentionally simplistic. `git status` will help you determine if there is mess.
-* Pick a primary build machine. It *must* be POSIX (`make pkg` is not Windows compatible); if you do not have a POSIX machine handy, consider making a virtual machine with VirtualBox or VMWare.
-* Login remotely (ssh, RDP, or VNC) to each build machine, or just walk across the room to the other build machines.
-  * SPECIAL WINDOWS EXCEPTION: Instead of having two Windows-32 and Windows-64 build machines, open terminals on one Windows machine:
-    one with the 64 bit build (Visual Studio or MinGW) build tools loaded, and
-    one with the 32 bit (Visual Studio or MinGW) build tools.
-    Refer to "Toolchain" above.
-* `cd` to repository/src on each machine
-* synchronize:
-  * while repos are out of sync:
-    * for each build machine:
-      * `git pull` + fix any merge conflicts
-      * `git diff; git commit -a; git push`
-* for each build machine: `make clean; make`
-* manually copy the bin/ folder to your primary machine, over your choice of USB stick, SMB, NFS, SFTP, FTP, etc.
-* on the primary build machine: `make pkg`
-
-
-There is a shortcut version of this process, quicker but more prone to mistakes:
-
-* Make sure the tree is clean, as above.
-* Pick a primary build machine; make sure it is POSIX (`make pkg` is not Windows compatible).
-* Login remotely (ssh, RDP, or VNC) to each build machine
-* remotely mount (either via sshfs or smb, depending on platform) the repository from the primary
-* `cd` into repository/src; this means the remotely mounted repository, for non-primary build machines
-* on each machine: `make clean; make`
-  * since the drive is network-shared, everything ends up in the same build folder, but platform-specific pieces get placed under `bin/<platform>/`, so they do not conflict with each other.
-* on the primary: `make pkg`
-
-
-There is a [Mac Mini](BUILDBOT.md) which has VMs all in one place for doing all the above work. Ask a project member about it if you want to use it.
-
-
-Once `pkg` has gone through, **test it**. There may have been a packaging glitch which broke, say, 32 bit Windows, and if so you need to start this ritual from the top.
-* On the primary, `../scripts/distserver.sh`
-* For each build machine, run Stata and do `. net install svm, from(http://$PRIMARY:8000/)` and make sure everything in the package works.
-  * better if you use fresh VM copies of the build machines, ones which definitely lack the repository and libsvm
-
-
-Once you think the package is ready for deployment, zip up the `dist/` folder and submit it to
-[ssc](http://www.stata.com/support/ssc-installation/) by contacting [TODO].
-When you make the zip **make sure extraneous files do not get included**:
-OS X's GUI archiver adds a folder `__MAXOSX` to the root of every zip; that OS itself scatters `.DS_Store` files everywhere;
-if you use vim or emacs you might have hidden backup files in the folder.
+See [build.yml](.github/workflows/build.yml).

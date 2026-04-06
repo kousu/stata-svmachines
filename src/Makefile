@@ -211,6 +211,4 @@ all: svm_examples.ihlp
 # *.log *should* get cleaned up by the testing recipe, but in case it doesn't or you have made some manually we clean it again here
 clean:
 	-$(RM) *.o *.plugin *.log *.model
-	-$(RMDIR) $(call FixPath)
-# Line below from Nick: it also removes plugins  from dist/bin (including all 3 OS) which is undesirable
-#	-$(RMDIR) $(call FixPath,bin/$(PLATFORM))
+	-$(RMDIR) $(call FixPath,bin/$(PLATFORM))
