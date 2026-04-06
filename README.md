@@ -41,7 +41,7 @@ On Windows, libsvm is bundled with this package so installation requires no furt
 Alternate Installation
 ----------------------
 
-If the published [SSC](https://www.stata.com/support/ssc-installation/) [copy](fmwww.bc.edu/repec/bocode/s/svmachines.pkg) is not working, try the original [Stata Journal](https://www.stata-journal.com/) [copy](https://www.stata-journal.com/software/sj16-4/st0461.pkg)
+If the published [SSC](https://www.stata.com/support/ssc-installation/) [copy](http://fmwww.bc.edu/repec/bocode/s/svmachines.pkg) is not working, double check at the [SSC search engine](https://econpapers.repec.org/software/bocbocode/s458564.htm) or try the original [Stata Journal](https://www.stata-journal.com/) [copy](https://www.stata-journal.com/software/sj16-4/st0461.pkg).
 
 ```
 . net uninstall svmachines
