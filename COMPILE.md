@@ -8,7 +8,6 @@ If you just want to use it, see [INSTALL](INSTALL.md).
 Build requirements:
 * GNU make
 * a compiler
-* libsvm
 
 Toolchain
 ---------
@@ -35,14 +34,19 @@ If either of these fail, you will need to install your compilers before continui
 
 ### Windows
 
-On Windows, you can [get the gmake package](http://gnuwin32.sourceforge.net/packages/make.htm) or install it [MinGW's subproject MSYS](http://www.mingw.org/wiki/MSYS).
-In the former case, you will need to add it to your %PATH% manually, by [editing your environment variables](http://www.computerhope.com/issues/ch000549.htm) to append
-the GnuWin32 program folder, usually "C:\Program Files (x86)\GnuWin32\bin" to the PATH variable; for the latter you will have to follow their instructions.
-You will also need awk, which is [again available](http://gnuwin32.sourceforge.net/packages/gawk.htm) from GnuWin32.
+On Windows, you should install [msys2](https://www.msys2.org/) and inside its shell install
 
-For a Windows compiler, you can use [MinGW](http://www.mingw.org/) or Visual Studio.
+```
+pacman -S make
+```
 
-The latter demands you amend your %PATH% by [using `vcvarsall.bat`](https://msdn.microsoft.com/en-us/library/f2ccy3wt.aspx) every time you start a command prompt session; here are some command lines which will accomplish this but **beware that you will need to adjust these paths if you have a different version of VS**. For 32 bit builds:
+You can compile with the free GCC if you install
+
+```
+pacman -S mingw-w64-ucrt-x86_64-gcc
+```
+
+or you can use Microsoft's Visual Studio. To use Visual Studio, once you have it installed, amend your %PATH% by [using `vcvarsall.bat`](https://msdn.microsoft.com/en-us/library/f2ccy3wt.aspx) every time you start a command prompt session; here are some command lines which will accomplish this but **beware that you will need to adjust these paths if you have a different version of VS**. For 32 bit builds:
 ```
 C:> "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
 ```
@@ -52,17 +56,12 @@ C:> "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_a
 ```
 There are also "Developer Command Prompt" shortcuts in your start menu, as described in the above link. Remember that whichever method you use, you must do it every time you begin a session!
 
-For the former, make sure you've followed the [official MinGW setup instructions](http://www.mingw.org/wiki/Getting_Started). Those instructions leave some things up to you, however: you can install [MSYS]() and, or your can add C:\MinGW\bin to your %PATH%.  Be warned though: MinGW only does 32-bit builds (there is a [MinGW64 fork](http://mingw-w64.yaxm.org/) and some sketchy [instructions](http://ascend4.org/Setting_up_a_MinGW-w64_build_environment#Switchable_32-_and_64-bit_modes) which let you dual-boot them), and the only symptom you will have of tripping over this is mysterious linker errors that won't go away.   TODO
-The Makefile checks for VS first, so if you have both installed you can choose which to use simply by amending or not amending your %PATH%.  TODO
+The build _should_ work under either compiler; please report problems, especially if the build works with one compiler but not the other.
 
 ### OS X
 
-On OS X, you will need the **Command Line Tools** package.
-If you have an older version XCode, this is available [in the menus](TODO, depending on version.
-Otherwise, you can get them from the [ADC Downloads page](https://developer.apple.com/downloads/),
- but you will need to sign up for an Apple ID and agree to Apple's terms.
- Make sure you get the one that matches your version of OS X!
-Finally, you can apparently, with no account, [on recent OS Xs](http://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/), simply run
+On OS X, you will need the **Command Line Tools** package:
+
 ```
 $ xcode-select --install
 ```
@@ -77,86 +76,15 @@ libsvm
 ------
 
 [libsvm](http://www.csie.ntu.edu.tw/~cjlin/libsvm/) is the C library which does the heavy lifting. Stata-SVM is a thin wrapper which exposes its routines and makes them Stata-esque.
-If you get "'svm.h' file not found" when compiling, you are missing a libsvm installation.
 
-### Windows
+We _vendor_ a libsvm (see [src/libsvm.mk](src/libsvm.mk)), meaning we compile it from source and then embed it directly inside the the plugins.
 
-TODO: this is out of date. the repo has `windows/libsvm.{lib,dll}` which makes this; but it is still useful to know how to compile libsvm for Windows, in case of version bumps, so for now this stays. Sorry. I'll clean this up later.
-
-To compile against a DLL on Windows, you must have its associated .lib file. Unless the library author provides it [citation needed] the only way source for them is as a by-product of compiling that DLL.
-The proper way to do this is to compile and 'install' libsvm manually:
-0) Install Visual Studio (libsvm does not yet come with a MinGW build script)
-1) Download the libsvm source code. Unzip it.
-2) Open up a command prompt in that folder (Shift+Right Click on the folder -> Open Command Window Here) and run
-```
-C:\path\to\libsvm>"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
-C:\path\to\libsvm>nmake -f Makefile.win
-```
-This will get you svm.h, windows\libsvm.lib and windows\libsvm.dll in that folder, which are the three things you need to build Stata-SVM successfully.
-To get the build to pick them up, you will need to set three corresponding environment variables:
-```
-C:\path\to\libsvm>SET INCLUDE=%INCLUDE%;C:\path\to\libsvm
-C:\path\to\libsvm>SET LIB=%LIB%;C:\path\to\libsvm\windows
-C:\path\to\libsvm>SET PATH=%PATH%;C:\path\to\libsvm\windows
-```
-INCLUDE is an environment variable used by the the VS compiler; LIB is used by the VS linker; the PATH is how Windows finds libsvm.dll at run time.
-When the Makefile detects MinGW it patches the contents of these variables over MinGW, so you only need to do this configuration once.
-Make sure to substitute C:\path\to\libsvm with the actual path (Shift+Right Click on the folder->Copy As Path)!
-
-To make this permanent, "Edit Environment Variables for your Account" (available by search the Start Menu) (make sure you append to, not overwrite, whichever of these already exist, as those SET commands do).
-Restart your command prompt and inspect
-```
-C:> echo %INCLUDE%
-C:> echo %LIB%
-C:> echo %PATH%
-```
-to ensure your changes took.
-
-In theory, you should also be able to skip these tweaks and just install libsvm as a system library, as you would on *nix.
-For example, you could install libsvm into msys, as described at [Installation and Use of Supplementary Libraries with MinGW](http://www.mingw.org/wiki/HOWTO_Specify_the_Location_of_Libraries_for_use_with_MinGW#toc3),
-or maybe [chocolatey](https://chocolatey.org/packages) will get a libsvm package, but this is as yet untested.
-
-### *nix: (including OS X)
-
-Debian (including Ubuntu):
-```
-# apt-get install libsvm3
-# apt-get install libsvm-dev # svm.h is in a separate package
-```
-
-Fedora 23+:
-```
-# dnf install libsvm
-# dnf install libsvm-devel
-```
-
-Fedora 22-:
-```
-# yum install libsvm
-# yum install libsvm-devel
-```
-
-Arch (use the [AUR](https://aur.archlinux.org)):
-```
-$ yaourt -S libsvm
-```
-
-
-OS X (using brew):
-```
-$ brew install libsvm
-```
-
-OS X (using MacPorts):
-```
-# port install libsvm
-```
-If you choose to use MacPorts, pay attention to the part where you tell the system to look for libraries in /opt, much like the situation on Windows.
 
 Building
 --------
 
 Once you have set up a compiler, open a shell **in the `src/` subdirectory** and run
+
 ```
 $ make
 ```

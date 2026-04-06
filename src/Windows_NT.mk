@@ -10,7 +10,10 @@ FixPath = $(subst /,\,$1)
 # platform config
 DLLEXT:=dll
 
-# the common testing code is written POSIXey; these variables glue POSIX shell into the DOS shell, more or less.
+# Under MSYS2, use *nix tools.
+# But if not under MSYS2, substitute Windows equivalents.
+#
+ifndef MSYSTEM
 ifndef LN #XXX assuming that this missing means all are missing
 WHICH:=where
 NULL:=NUL
@@ -22,7 +25,6 @@ CP:=copy /Y 2>NUL
 MKDIR:=mkdir
 LN:=$(CP)  #Windows doesn't have reliable hard links (NTFS does, but you know), so instead of linking just duplicate.
 endif
-
 # 'del', 'type' and so on are are DOS builtins and, unlike POSIX, they are *only builtins* (there is no /bin/[ on Windows),
 # so we must run them via cmd, either by prefixing them with `cmd /c` or, more simply, enforcing which shell make uses.
 # forcing the shell also gets around the problem that bash, which comes with Cygwin/Cmder, gets confused on spaces in program paths
@@ -31,6 +33,7 @@ endif
 # "However, on MS-DOS and MS-Windows the value of SHELL in the environment is used, since on those systems most users do not set this variable, and therefore it is most likely set specifically to be used by make. On MS-DOS, if the setting of SHELL is not suitable for make, you can set the variable MAKESHELL to the shell that make should use; if set it will be used as the shell instead of the value of SHELL."
 # - <http://www.gnu.org/software/make/manual/make.html#Choosing-the-Shell>
 SHELL := cmd
+endif
 
 
 
@@ -51,29 +54,25 @@ ifeq ($(shell where $(CC) 2>NUL),)
   endif
 endif
 
-ifeq ($(shell where $(CC) 2>NUL),)
-  # but if it's not found,
-  # look for MSVC and then MinGW if that fails
-  # this if a nested-if-else tree because what I'd do in another language (a hashtable of function pointers, or at least a list of options plus a loop) is, charitably speaking, tricky in make
-  ifdef VCINSTALLDIR
-    $(info Assuming Visual Studio)
-    include Windows.VC.mk
-  else
-      # if the toolchain is still not found, bail
-      # it is too hard to do multiline error strings in make (http://stackoverflow.com/questions/649246/is-it-possible-to-create-a-multi-line-string-variable-in-a-makefile), so I'm misusing $(warning) instead: 
-      $(warning --------------------------------------------------------------------)
-      $(warning Unable to find a C compiler for your Windows machine)
-      $(warning - If you have MinGW, you should ensure it is on your %PATH%)
-      $(warning - If you have Visual Studio installed, add it to your %PATH%:)
-      $(warning i. Relaunch this command prompt from the system-appropriate VS Tools Command Prompt shortcut in your Start Menu,)
-      $(warning ii. or invoke vcvarsall.bat manually (see https://msdn.microsoft.com/en-us/library/x4d2c09s.aspx))
-      $(warning --------------------------------------------------------------------)
-	  
-	  CC:="<no_compiler>"
-  endif
-else
+ifdef VCINSTALLDIR
+  # prefer Visual Studio (since it's the easiest)
+  $(info Assuming Visual Studio)
+  include Windows.VC.mk
+else ifneq ($(shell where $(CC) 2>NUL),)
+  # but fall back to MinGW / msys2
   $(info Assuming MinGW)
   include Windows.MinGW.mk
+else
+    # if the toolchain is still not found, bail
+    # it is too hard to do multiline error strings in make (http://stackoverflow.com/questions/649246/is-it-possible-to-create-a-multi-line-string-variable-in-a-makefile), so I'm misusing $(warning) instead:
+    $(warning --------------------------------------------------------------------)
+    $(warning Unable to find a C compiler for your Windows machine)
+    $(warning - If you have MinGW, you should ensure it is on your %PATH%)
+    $(warning - If you have Visual Studio installed, add it to your %PATH%:)
+    $(warning i. Relaunch this command prompt from the system-appropriate VS Tools Command Prompt shortcut in your Start Menu,)
+    $(warning ii. or invoke vcvarsall.bat manually (see https://msdn.microsoft.com/en-us/library/x4d2c09s.aspx))
+    $(warning --------------------------------------------------------------------)
+  CC:="<no_compiler>"
 endif
 
 
