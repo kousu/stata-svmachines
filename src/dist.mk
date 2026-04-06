@@ -36,8 +36,15 @@ DIST:=$(patsubst %,dist/$(PKG)/%,$(DIST))
 _dist: $(DIST)
 # this splitting + recursive make weirdness is because $(wildcard) needs to get evaluated *after*
 # the build has happened, but all $(wildcard)s are eval'd at Makefile-scan time, not Makefile-exec time
-dist: all
+#
+# dist assumes platform bins are already present in bin/ and just collects them.
+# For a from-scratch single-platform build, use dist-fresh which compiles first.
+dist: svm_examples.ihlp
 	$(MAKE) _dist
+
+.PHONY: dist-fresh
+dist-fresh: all
+	$(MAKE) dist
 
 # copy listed files into the distribution directory
 dist/$(PKG)/%: %
