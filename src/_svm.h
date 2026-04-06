@@ -1,6 +1,6 @@
 /* header file for Stata-SVM extension module _svm.plugin */
 
-#include "svm.h"
+#include <svm.h>
 #include "stplugin.h"
 
 #if _WIN32

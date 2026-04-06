@@ -15,28 +15,13 @@ Installation
 ------------
 
 In Stata:
+
 ```
 . ssc install svmachines
 ```
-will install the most recent version of this wrapper.
 
-As it is only a wrapper, so you need to install [libsvm](http://www.csie.ntu.edu.tw/~cjlin/libsvm/) too:
+will install the most recent version.
 
-### Windows
-
-On Windows, libsvm is bundled with this package so installation requires no further steps.
-
-### OS X
-
-* `brew install libsvm` _OR_
-* `port install libsvm`
-
-### Unix
-
-* Debian-derivatives: `apt-get install libsvm3`
-* Arch: libsvm is [in the AUR](https://aur.archlinux.org/packages/libsvm/)
-* Redhat/Fedora: `yum install libsvm` (**UNTESTED**)
-* You can manually [download](http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+tar.gz) and follow the [build instructions](https://github.com/cjlin1/libsvm).
 
 Alternate Installation
 ----------------------

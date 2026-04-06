@@ -4,7 +4,18 @@ $(warning If you get linker errors, check that you are using the right (32 vs 64
 
 include posix.mk
 
-LDFLAGS+=-shared  #the only reason this isn't in posix.mk is because it's wrong on OS X (XXX is it?)
+LDFLAGS += -shared  #the only reason this isn't in posix.mk is because it's wrong on OS X (XXX is it?)
+
+# build obligatory MinGW libraries statically to avoid having to ship their DLLs
+# A typical install pulls in:
+# - libgcc
+# - libstdc++
+# - libwinpthreads (if the target or its libraries come from C++)
+LDLIBS += -static
+
+# strip debug sections from the static runtime libraries; they ship with DWARF
+# debug info which would otherwise bloat the DLL significantly (~250 KB extra)
+LDFLAGS += -Wl,--strip-debug
 
 CFLAGS+=-D_USRDLL -D_WINDLL
 CFLAGS+=-O2

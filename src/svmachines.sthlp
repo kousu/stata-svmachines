@@ -119,21 +119,6 @@ Then please write us with your suggestions for clarification.
 {pstd}
 Please also feel free to {help svmachines##authors:send us} any other feature requests.
 
-{marker installation}{...}
-{title:Installation}
-
-{pstd}
-Since this is just a wrapper, {bf:libsvm must be installed} to use this package.
-On Windows, libsvm.dll is bundled with the package,
-and you can find it in your {help adopath} (try {cmd:findfile libsvm.dll} to verify this).
-On OS X, libsvm is available in both {browse "https://brew.sh":brew} and {browse "https://www.macports.org":macports}.
-On Linux, search for libsvm in your distribution's package manager.
-You can also compile and install libsvm from source, 
-if you cannot find it in your package manager or if you want the latest libsvm.
-If you are having plugin load errors, please {help svmachines##authors:contact the authors},
-as we want to make the experience as smooth as possible for our users across as many platforms as possible.
-
-
 {marker options}{...}
 {title:Options}
 
@@ -423,8 +408,8 @@ If you overflow {help matsize}, the matrix that overflowed will be missing, but 
 
 {pmore}
 If Stata's memory limits are an impossible hurdle,
-your best option is to give up on Stata and switching to libsvm's companion {cmd:svm-train} program.
-This will have been installed with the libsvm package if you used a package manager, or
+you can try libsvm's companion {cmd:svm-train} program.
+Look for libsvm in your system package manager, or
 you can get it {browse "http://www.csie.ntu.edu.tw/~cjlin/cgi-bin/libsvm.cgi?+http://www.csie.ntu.edu.tw/~cjlin/libsvm+zip":from its authors};
 You can use {help svmlight:export_svmlight} to extract your dataset for use with {cmd:svm-train}.
 
@@ -472,7 +457,7 @@ SOFTWARE.
 libsvm is licensed:
 
 {pmore}
-Copyright (c) 2000-2014 Chih-Chung Chang and Chih-Jen Lin
+Copyright (c) 2000-2021 Chih-Chung Chang and Chih-Jen Lin
 All rights reserved.
 
 {pmore}

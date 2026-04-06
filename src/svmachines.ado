@@ -1,7 +1,7 @@
 /* svmachines: the entry point to the support vector fitting algorithm */
 
 program define svmachines
-*! version 1.2.2
+*! version 1.2.3
   version 13
   
   //plugin call does not handle factor variables.
@@ -13,5 +13,6 @@ program define svmachines
   xi: _svm_train `0'        
 end
 // Version History
+// version 1.2.3 April 2026, distribute libsvm v3.2.5 embedded within _svmachines.plugin, instead of distributing libsvm.dll on Windows, libsvm.dylib on macOS, or asking Linux users to install libsvm.so separately.
 // version 1.2.2 Aug 2021, _svm_model2stata.ado: only saving support vectors up to size 11,000 unless Stata MP is used
 // version 1.2.1 June 2020, Predictions vars take the same type as y. If y is int/byte/double, this was a problem for regression.

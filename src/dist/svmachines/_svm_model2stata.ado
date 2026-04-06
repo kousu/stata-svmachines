@@ -10,7 +10,6 @@
  */
 
 /* load the C extension */
-svm_ensurelib           // check for libsvm
 program _svmachines, plugin    // load the wrapper for libsvm
 
 program define _svm_model2stata, eclass
