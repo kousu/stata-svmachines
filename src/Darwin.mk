@@ -12,11 +12,7 @@ include posix.mk
 # - is this a time for recurisve make?
 _svmachines.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT),_svmachines.c sttrampoline.c stutil.c stplugin.c)
 _svmachines.$(DLLEXT): libsvm_patches.$(OBJEXT)
-_svmachines.$(DLLEXT): LIBS += svm
 _svmlight.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT),_svmlight.c sttrampoline.c stutil.c stplugin.c)
-_svm_getenv.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT),_svm_getenv.c stutil.c stplugin.c)
-_svm_setenv.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT),_svm_setenv.c stutil.c stplugin.c)
-_svm_dlopenable.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT), _svm_dlopenable.c stutil.c stplugin.c)
 
 
 DLLEXT:=dylib
@@ -26,17 +22,14 @@ CFLAGS+=-std=c99 #arrrrgh, this should be the default
 
 LDFLAGS+=-bundle
 ARCH:=$(shell uname -m)
-LDFLAGS+=-Lmacos/$(ARCH)
 
 
 # the complicated install_name_tool line takes everything in LIBS and rewrites them with as a filename; this means that LD_LIBRARY_PATH and DYLD_LIBRARY_PATH will be searched at runtime for this library. This goes against the OS X conventions, but the OS X conventions don't understand package management.
 # this *doesn't* use @rpath, but it could, and it might if I reneg on this opinion and switch to bundling.
 # TODO: if we decide to bundle libsvm.dylib, we'll also need to add the current directory to where the .dylib will look for depends, like Windows. On Linux, people often write wrappers that manipulate LD_LIBRARY_PATH before launch, but OS X lets us bundle this information *into the executable*: use `-Wl,-rpath,.` (or maybe `-Wl,-rpath,@executable_path`). See `man ld`
-
-
 %.dylib: %.so
 	$(CP) $< $@
-	$(foreach L,$(LIBS),ABS=$$(otool -L $@ | tail -n +2 | grep $L | cut -f 1 -d " ") && install_name_tool -change $$ABS libsvm.dylib $@ &&) true
+	$(foreach L,$(LIBS),ABS=$$(otool -L $@ | tail -n +2 | grep $L | cut -f 1 -d " "); [ -z "$$ABS" ] || install_name_tool -change $$ABS $$(basename $$ABS) $@;) true
 
 # --- testing ---
 
@@ -47,7 +40,7 @@ printdeps:
 # --- cleaning ---
 
 .PHONY: clean-darwin
-clean-darwin:  clean-posix
+clean-darwin: clean-posix
 	-$(RM) *.dylib
 
 clean: clean-darwin

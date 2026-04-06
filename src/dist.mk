@@ -45,7 +45,7 @@ dist/$(PKG)/%: %
 #	# so recursive make is the only way to go. || echo is a cross-platform NOP, like || true,
 #	# which is to silence the error that comes if the directory already exists which is, again,
 #	# because it's easier than figuring out a cross-platform "if [ -d ... ]"
-	@-$(MKDIR) $(call FixPath,$(dir $@)) 2>$(NULL) || echo >$(NULL)
+	$(MKDIR) $(call FixPath,$(dir $@))
 	$(CP) $(call FixPath,$<) $(call FixPath,$@)
 
 

@@ -472,7 +472,7 @@ SOFTWARE.
 libsvm is licensed:
 
 {pmore}
-Copyright (c) 2000-2014 Chih-Chung Chang and Chih-Jen Lin
+Copyright (c) 2000-2021 Chih-Chung Chang and Chih-Jen Lin
 All rights reserved.
 
 {pmore}

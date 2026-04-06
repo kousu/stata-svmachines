@@ -2,7 +2,7 @@
 # This is a cross-platform makefile
 #
 
-# tips gleaned from 
+# tips gleaned from
 # - http://stackoverflow.com/questions/4058840/makefile-that-distincts-between-windows-and-unix-like-systems
 # - http://stackoverflow.com/questions/7876876/tell-if-make-is-running-on-windows-or-linux
 # - http://make.mad-scientist.net/papers/rules-of-makefiles/
@@ -59,6 +59,7 @@ include test.mk
 
 include dist.mk
 
+include libsvm.mk
 
 include util.mk
 
@@ -134,32 +135,6 @@ ifeq ($(PLATFORM),WIN64) #handle the nuisance special case
 endif
 
 
-ifeq ($(OS),Windows_NT)
-# rules for automatically including bundled DLLs in the build
-# this clearly needs to be in Windows_NT.mk, but we don't have PLATFORM computed in there.. ugh
-
-bin/$(PLATFORM)/libsvm.dll: windows/$(ARCH)/libsvm.dll
-	@$(MKDIR) $(call FixPath,$(dir $@)) 2>$(NULL) || echo >$(NULL)
-	$(LN) $(call FixPath,$<) $(call FixPath,$@)
-
-# specific dist dependencies
-# 1) _svmachines.plugin depends on libsvm
-bin/$(PLATFORM)/_svmachines.plugin: bin/$(PLATFORM)/libsvm.dll
-endif
-
-
-ifeq ($(OS),Darwin)
-
-bin/$(PLATFORM)/libsvm.dylib: macos/$(ARCH)/libsvm.dylib
-	@$(MKDIR) $(call FixPath,$(dir $@)) 2>$(NULL) || echo >$(NULL)
-	$(LN) $(call FixPath,$<) $(call FixPath,$@)
-
-# specific dist dependencies
-# 1) _svmachines.plugin depends on libsvm
-bin/$(PLATFORM)/_svmachines.plugin: bin/$(PLATFORM)/libsvm.dylib
-endif
-
-
 ifeq ($(wildcard bin/$(PLATFORM)),)
 # if bin/ does not not exist for the current platform
 # we need to do a fresh build
@@ -187,17 +162,18 @@ endif
 #       we will ultimately distribute all of $(OS)/$(ARCH)/svm.plugin to everyone, since that's about the best we can do given Stata's simplistic package management system.
 
 # generic plugin chain: _%.c -> %.o -> %.so -> bin/$(PLATFORM)/_%.plugin -> _%.plugin -> phony "plugin" target
-# (except on OS X .so is .dylib and on Windows .o is .obj and .so is .dll) 
+# (except on OS X .so is .dylib and on Windows .o is .obj and .so is .dll)
 
 plugin: $(patsubst %.c,%.plugin,$(wildcard _*.c))
 
 %.plugin: bin/$(PLATFORM)/%.plugin
+	$(MKDIR) $(call FixPath,$(dir $@))
 	$(LN) $(call FixPath,$<) $(call FixPath,$@)
 
 # prevent the platform-specific plugins getting eaten by make
 .SECONDARY: $(patsubst %.c,bin/$(PLATFORM)/%.plugin,$(wildcard _*.c)) #this is ugly because the special targets (like many things in make) can't handle patterns, so we have to generate all the files to mark explicitly
 bin/$(PLATFORM)/%.plugin: %.$(DLLEXT)
-	@$(MKDIR) $(call FixPath,$(dir $@)) 2>$(NULL) || echo >$(NULL)
+	$(MKDIR) $(call FixPath,$(dir $@))
 	$(LN) $(call FixPath,$<) $(call FixPath,$@)
 
 
@@ -214,9 +190,6 @@ _svmachines.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT), _svmachines.c sttrampoline.c 
 _svmachines.$(DLLEXT): libsvm_patches.$(OBJEXT)
 _svmachines.$(DLLEXT): LIBS += svm
 _svmlight.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT), _svmlight.c sttrampoline.c stutil.c stplugin.c)
-_svm_getenv.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT), _svm_getenv.c stutil.c stplugin.c)
-_svm_setenv.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT), _svm_setenv.c stutil.c stplugin.c)
-_svm_dlopenable.$(DLLEXT): $(patsubst %.c,%.$(OBJEXT), _svm_dlopenable.c stutil.c stplugin.c)
 
 # Files in ancillary named *_example.do are bundled into the package and bundled into the
 # documentation with a slick "Click to Run" which downloads the examples and runs them if missing.
@@ -241,10 +214,3 @@ clean:
 	-$(RMDIR) $(call FixPath)
 # Line below from Nick: it also removes plugins  from dist/bin (including all 3 OS) which is undesirable
 #	-$(RMDIR) $(call FixPath,bin/$(PLATFORM))
-
-	
-	
-
-
-
-
