@@ -1,8 +1,11 @@
-# Aug2018: commented out Nick's line /dist  below 
+# Aug2018: commented out Nick's line /dist  below
 # we want to track the dist folder, and all its subdirectory
 # /dist
 # Aug2018: added this line
 /bin
+
+*.plugin
+!dist/**/*.plugin
 
 # hide my ancillary/ symlink hack
 # shhhh, nothing to see here
