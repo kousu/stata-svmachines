@@ -4,6 +4,9 @@
 # Aug2018: added this line
 /bin
 
+tests/*.log
+!folder/*.expect.log
+
 # hide my ancillary/ symlink hack
 # shhhh, nothing to see here
 /*.do

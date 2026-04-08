@@ -1,0 +1,73 @@
+
+. * train_svr.do
+. clear
+
+. sysuse auto
+(1978 Automobile Data)
+
+. svmachines price mpg-gear_ratio if !missing(rep78), type(nu_svr) kernel(sigmoid)
+Your dependent variable is of type "int". The prediction variable will take the same type. To allow for continuous pred
+> ictions, your dependent variable "price" has been recast to type "double" 
+
+. do ./helpers/inspect_model.do
+
+. * inspect_model.do
+. * Inspect fitted model state, as known to Stata
+. * NOTE: this is autoincluded to all tests via makefile magic; hence,
+. * it is wrapped to silence errors on tests which don't make a struct svm_model
+. * AND *each line* is wrapped so that their errors are independent of the others, just as a defensive measure
+. * BUT as an output optimization, we assume that if nSV is not defined, we can skip trying the rest
+. 
+. * These two should usually be empty, except for preload which of course has to use scalars to communicate
+. capture noisily scalar list
+
+. capture noisily matrix dir   /* unlike 'scalar list', 'matrix list' shows a *single* matrix and 'dir' shows all */
+
+. 
+. capture matrix list e(rho) /*I can't figure out a better to test if a variable is defined than to try to access it an
+> d see if it crashes */
+
+. if(_rc==0) {  
+.   capture noisily ereturn list /* because of Stata's single-global-return-list design, the only time we can access th
+> is data is immediately after a svm_train or svm_import */
+
+scalars:
+                  e(N) =  69
+            e(N_class) =  2
+               e(N_SV) =  36
+
+macros:
+             e(depvar) : "price"
+         e(svm_kernel) : "SIGMOID"
+           e(svm_type) : "NU_SVR"
+              e(model) : "svmachines"
+              e(title) : "Support Vector Machine"
+              e(estat) : "svm_estat"
+            e(predict) : "svm_predict"
+            e(cmdline) : "svmachines price mpg rep78 headroom trunk weight length turn displacement gear_ratio if !.."
+                e(cmd) : "svmachines"
+
+matrices:
+                e(rho) :  2 x 2
+            e(sv_coef) :  1 x 36
+.   capture noisily matrix list e(sv_coef)
+
+e(sv_coef)[1,36]
+     SV1   SV2   SV3   SV4   SV5   SV6   SV7   SV8   SV9  SV10  SV11  SV12  SV13  SV14  SV15  SV16  SV17  SV18  SV19
+r1    -1     1     1    -1     1     1     1    -1    -1    -1    -1    -1     1    -1     1     1     1    -1   .25
+
+    SV20  SV21  SV22  SV23  SV24  SV25  SV26  SV27  SV28  SV29  SV30  SV31  SV32  SV33  SV34  SV35  SV36
+r1    -1     1    -1  -.25     1    -1    -1     1     1     1    -1    -1    -1    -1     1     1     1
+.   capture noisily matrix list e(rho)
+
+symmetric e(rho)[2,2]
+       c1     c2
+r1      .
+r2  -5249      .
+. }
+
+. 
+. 
+end of do-file
+
+. 

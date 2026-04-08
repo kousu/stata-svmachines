@@ -47,10 +47,22 @@ tests/setenv: _svm_setenv.plugin
 .PHONY: tests
 tests: $(TESTS)
 
+.PHONY: tests-expect
+tests-expect: $(patsubst %,%.expect.log,$(TESTS))
+
 STATA:=../scripts/stata
 
-tests/%: tests/%.do
-	cd $(dir $<) && ADOPATH=$$(pwd)/../ "$(call FixPath,../$(STATA))" $(call FixPath,$(notdir $<))
+tests/%.expect.log: tests/%.do
+	cd $(dir $<) && \
+	ADOPATH=$$(pwd)/../ "$(call FixPath,../$(STATA))" $(call FixPath,$(notdir $<)) > $*.expect.log
+	@$(CAT) tests/$*.expect.log
+
+tests/%: tests/%.do tests/%.expect.log
+	@echo -n "$<: "
+	@cd $(dir $<) && \
+	ADOPATH=$$(pwd)/../ "$(call FixPath,../$(STATA))" $(call FixPath,$(notdir $<)) > $*.log
+	@diff -u $(call FixPath,$@.expect.log) $(call FixPath,$@.log)
+	@echo passed
 
 # auto-wrap tests with the code in tests/helpers/
 # Stata doesn't pass command line arguments to batch scripts
@@ -92,4 +104,5 @@ clean: clean-tests
 .PHONY: clean-tests
 clean-tests:
 	-$(RM) $(call FixPath,tests/*.model)
+	-$(RM) $(call FixPath,$(filter-out %.expect.log,$(wildcard tests/*.log)))
 	-$(RMDIR) $(call FixPath,tests/wrapped)
