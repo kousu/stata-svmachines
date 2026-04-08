@@ -1,0 +1,108 @@
+
+. * predict_scores.do
+. clear
+
+. sysuse auto
+(1978 Automobile Data)
+
+. svmachines foreign price-gear_ratio if !missing(rep78)
+
+. capture noisily predict P, scores
+
+. 
+. list foreign P*
+
+     +--------------------------------+
+     |  foreign          P   P_Dome~n |
+     |--------------------------------|
+  1. | Domestic   Domestic          1 |
+  2. | Domestic   Domestic          1 |
+  3. | Domestic          .          . |
+  4. | Domestic   Domestic          1 |
+  5. | Domestic   Domestic          1 |
+     |--------------------------------|
+  6. | Domestic   Domestic          1 |
+  7. | Domestic          .          . |
+  8. | Domestic   Domestic          1 |
+  9. | Domestic   Domestic          1 |
+ 10. | Domestic   Domestic          1 |
+     |--------------------------------|
+ 11. | Domestic   Domestic          1 |
+ 12. | Domestic   Domestic          1 |
+ 13. | Domestic   Domestic          1 |
+ 14. | Domestic   Domestic          1 |
+ 15. | Domestic   Domestic          1 |
+     |--------------------------------|
+ 16. | Domestic   Domestic          1 |
+ 17. | Domestic   Domestic          1 |
+ 18. | Domestic   Domestic          1 |
+ 19. | Domestic   Domestic          1 |
+ 20. | Domestic   Domestic          1 |
+     |--------------------------------|
+ 21. | Domestic   Domestic          1 |
+ 22. | Domestic   Domestic          1 |
+ 23. | Domestic   Domestic          1 |
+ 24. | Domestic   Domestic          1 |
+ 25. | Domestic   Domestic          1 |
+     |--------------------------------|
+ 26. | Domestic   Domestic          1 |
+ 27. | Domestic   Domestic          1 |
+ 28. | Domestic   Domestic          1 |
+ 29. | Domestic   Domestic          1 |
+ 30. | Domestic   Domestic          1 |
+     |--------------------------------|
+ 31. | Domestic   Domestic          1 |
+ 32. | Domestic   Domestic          1 |
+ 33. | Domestic   Domestic          1 |
+ 34. | Domestic   Domestic          1 |
+ 35. | Domestic   Domestic          1 |
+     |--------------------------------|
+ 36. | Domestic   Domestic          1 |
+ 37. | Domestic   Domestic          1 |
+ 38. | Domestic   Domestic          1 |
+ 39. | Domestic   Domestic          1 |
+ 40. | Domestic   Domestic          1 |
+     |--------------------------------|
+ 41. | Domestic   Domestic          1 |
+ 42. | Domestic   Domestic          1 |
+ 43. | Domestic   Domestic          1 |
+ 44. | Domestic   Domestic          1 |
+ 45. | Domestic          .          . |
+     |--------------------------------|
+ 46. | Domestic   Domestic          1 |
+ 47. | Domestic   Domestic          1 |
+ 48. | Domestic   Domestic          1 |
+ 49. | Domestic   Domestic          1 |
+ 50. | Domestic   Domestic          1 |
+     |--------------------------------|
+ 51. | Domestic          .          . |
+ 52. | Domestic   Domestic          1 |
+ 53. |  Foreign    Foreign     -.4375 |
+ 54. |  Foreign    Foreign     -.4375 |
+ 55. |  Foreign    Foreign     -.4375 |
+     |--------------------------------|
+ 56. |  Foreign    Foreign     -.4375 |
+ 57. |  Foreign    Foreign     -.4375 |
+ 58. |  Foreign    Foreign     -.4375 |
+ 59. |  Foreign    Foreign     -.4375 |
+ 60. |  Foreign    Foreign     -.4375 |
+     |--------------------------------|
+ 61. |  Foreign    Foreign     -.4375 |
+ 62. |  Foreign    Foreign     -.4375 |
+ 63. |  Foreign    Foreign     -.4375 |
+ 64. |  Foreign          .          . |
+ 65. |  Foreign    Foreign     -.4375 |
+     |--------------------------------|
+ 66. |  Foreign    Foreign     -.4375 |
+ 67. |  Foreign    Foreign     -.4375 |
+ 68. |  Foreign    Foreign     -.4375 |
+ 69. |  Foreign    Foreign     -.4375 |
+ 70. |  Foreign    Foreign     -.4375 |
+     |--------------------------------|
+ 71. |  Foreign    Foreign     -.4375 |
+ 72. |  Foreign    Foreign     -.4375 |
+ 73. |  Foreign    Foreign     -.4375 |
+ 74. |  Foreign    Foreign     -.4375 |
+     +--------------------------------+
+
+. 

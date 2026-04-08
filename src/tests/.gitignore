@@ -1,3 +1,6 @@
 *.svmlight
 *.model
 *.dta
+
+*.log
+!*.expect.log

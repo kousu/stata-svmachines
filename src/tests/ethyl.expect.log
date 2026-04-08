@@ -1,0 +1,70 @@
+
+. // ethyl acrylate data , Bates and Watts, A1.10
+. 
+. clear 
+
+. import excel using "./ethyl.xlsx", firstrow
+
+. gen viscosity = exp(ln_viscosity)
+
+. 
+. set seed 100
+
+. gen u=uniform()
+
+. sort u
+
+. 
+. /////////////////////////////////////////////////////////////////////
+> 
+. local trainn=30
+
+. gen train= 0
+
+. replace train=1 if _n<=`trainn'
+(30 real changes made)
+
+. 
+. graph matrix  viscosity pressure  temp
+
+. twoway contour viscosity pressure temp
+
+. 
+. regress viscosity pressure temp if train
+
+      Source |       SS           df       MS      Number of obs   =        30
+-------------+----------------------------------   F(2, 27)        =      9.76
+       Model |  1.2685e+11         2  6.3424e+10   Prob > F        =    0.0006
+    Residual |  1.7547e+11        27  6.4991e+09   R-squared       =    0.4196
+-------------+----------------------------------   Adj R-squared   =    0.3766
+       Total |  3.0232e+11        29  1.0425e+10   Root MSE        =     80617
+
+------------------------------------------------------------------------------
+   viscosity |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    pressure |   30.23023   7.539026     4.01   0.000     14.76143    45.69903
+        temp |  -551.8822   415.7719    -1.33   0.196    -1404.976    301.2113
+       _cons |  -5727.932   33660.81    -0.17   0.866    -74794.21    63338.34
+------------------------------------------------------------------------------
+
+. predict res,res
+
+. predict pred
+(option xb assumed; fitted values)
+
+. predict rstan, rstan
+
+. bysort train: egen mse_reg=total((viscosity-pred)^2/`trainn')
+
+. 
+. 
+. // linear contour plot
+. twoway contour pred pressure temp
+
+.  
+. 
+. qnorm res
+
+. scatter rstan pred
+
+. exit 

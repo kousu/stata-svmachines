@@ -1,0 +1,120 @@
+
+. * predict_probability_strangelabels
+. * Ensure that the complicated labelling code buried in predict, prob behaves itself even when labels are shifted
+. * The final list should show that the probability columns are labelled with strings which mostly match what the actua
+> l values were.
+. clear
+
+. sysuse auto
+(1978 Automobile Data)
+
+. replace foreign = foreign+7
+(74 real changes made)
+
+. label define space_station 7 "DS9" 8 "Ferengi" // foreign was 0/1, now it's 7/8
+
+. label values foreign space_station
+
+. svmachines foreign price-gear_ratio if !missing(rep78), prob
+
+. capture noisily predict P, prob
+
+. capture noisily predict P2
+
+. 
+. list foreign P*
+
+     +-----------------------------------------------------+
+     | foreign         P       P_DS9   P_Ferengi        P2 |
+     |-----------------------------------------------------|
+  1. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+  2. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+  3. |     DS9         .           .           .         . |
+  4. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+  5. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+     |-----------------------------------------------------|
+  6. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+  7. |     DS9         .           .           .         . |
+  8. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+  9. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 10. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+     |-----------------------------------------------------|
+ 11. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 12. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 13. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 14. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 15. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+     |-----------------------------------------------------|
+ 16. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 17. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 18. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 19. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 20. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+     |-----------------------------------------------------|
+ 21. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 22. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 23. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 24. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 25. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+     |-----------------------------------------------------|
+ 26. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 27. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 28. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 29. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 30. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+     |-----------------------------------------------------|
+ 31. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 32. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 33. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 34. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 35. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+     |-----------------------------------------------------|
+ 36. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 37. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 38. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 39. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 40. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+     |-----------------------------------------------------|
+ 41. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 42. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 43. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 44. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 45. |     DS9         .           .           .         . |
+     |-----------------------------------------------------|
+ 46. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 47. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 48. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 49. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 50. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+     |-----------------------------------------------------|
+ 51. |     DS9         .           .           .         . |
+ 52. |     DS9   Ferengi   .04103263   .95896737       DS9 |
+ 53. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 54. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 55. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+     |-----------------------------------------------------|
+ 56. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 57. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 58. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 59. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 60. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+     |-----------------------------------------------------|
+ 61. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 62. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 63. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 64. | Ferengi         .           .           .         . |
+ 65. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+     |-----------------------------------------------------|
+ 66. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 67. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 68. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 69. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 70. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+     |-----------------------------------------------------|
+ 71. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 72. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 73. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+ 74. | Ferengi       DS9   .99996027   .00003973   Ferengi |
+     +-----------------------------------------------------+
+
+. 
