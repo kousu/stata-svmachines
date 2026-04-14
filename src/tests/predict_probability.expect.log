@@ -1,0 +1,111 @@
+
+. * export.do
+. clear
+
+. 
+. sysuse auto
+(1978 Automobile Data)
+
+. svmachines foreign price-gear_ratio if !missing(rep78), prob
+
+. capture noisily predict P, prob
+
+. capture noisily predict P2
+
+. 
+. list foreign P*
+
+     +--------------------------------------------------------+
+     |  foreign          P   P_Domes~c   P_Foreign         P2 |
+     |--------------------------------------------------------|
+  1. | Domestic    Foreign   .04103263   .95896737   Domestic |
+  2. | Domestic    Foreign   .04103263   .95896737   Domestic |
+  3. | Domestic          .           .           .          . |
+  4. | Domestic    Foreign   .04103263   .95896737   Domestic |
+  5. | Domestic    Foreign   .04103263   .95896737   Domestic |
+     |--------------------------------------------------------|
+  6. | Domestic    Foreign   .04103263   .95896737   Domestic |
+  7. | Domestic          .           .           .          . |
+  8. | Domestic    Foreign   .04103263   .95896737   Domestic |
+  9. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 10. | Domestic    Foreign   .04103263   .95896737   Domestic |
+     |--------------------------------------------------------|
+ 11. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 12. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 13. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 14. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 15. | Domestic    Foreign   .04103263   .95896737   Domestic |
+     |--------------------------------------------------------|
+ 16. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 17. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 18. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 19. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 20. | Domestic    Foreign   .04103263   .95896737   Domestic |
+     |--------------------------------------------------------|
+ 21. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 22. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 23. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 24. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 25. | Domestic    Foreign   .04103263   .95896737   Domestic |
+     |--------------------------------------------------------|
+ 26. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 27. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 28. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 29. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 30. | Domestic    Foreign   .04103263   .95896737   Domestic |
+     |--------------------------------------------------------|
+ 31. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 32. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 33. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 34. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 35. | Domestic    Foreign   .04103263   .95896737   Domestic |
+     |--------------------------------------------------------|
+ 36. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 37. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 38. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 39. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 40. | Domestic    Foreign   .04103263   .95896737   Domestic |
+     |--------------------------------------------------------|
+ 41. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 42. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 43. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 44. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 45. | Domestic          .           .           .          . |
+     |--------------------------------------------------------|
+ 46. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 47. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 48. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 49. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 50. | Domestic    Foreign   .04103263   .95896737   Domestic |
+     |--------------------------------------------------------|
+ 51. | Domestic          .           .           .          . |
+ 52. | Domestic    Foreign   .04103263   .95896737   Domestic |
+ 53. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 54. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 55. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+     |--------------------------------------------------------|
+ 56. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 57. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 58. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 59. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 60. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+     |--------------------------------------------------------|
+ 61. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 62. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 63. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 64. |  Foreign          .           .           .          . |
+ 65. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+     |--------------------------------------------------------|
+ 66. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 67. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 68. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 69. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 70. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+     |--------------------------------------------------------|
+ 71. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 72. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 73. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+ 74. |  Foreign   Domestic   .99996027   .00003973    Foreign |
+     +--------------------------------------------------------+
+
+. 

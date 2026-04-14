@@ -43,14 +43,25 @@ tests/setenv: _svm_setenv.plugin
 
 ## Main Test Harness Logic
 
-
 .PHONY: tests
 tests: $(TESTS)
 
+.PHONY: tests-expect
+tests-expect: $(patsubst %,%.expect.log,$(TESTS))
+
 STATA:=../scripts/stata
 
-tests/%: tests/%.do
-	cd $(dir $<) && ADOPATH=$$(pwd)/../ "$(call FixPath,../$(STATA))" $(call FixPath,$(notdir $<))
+tests/%.expect.log: tests/%.do
+	cd $(dir $<) && \
+	ADOPATH=$$(pwd)/../ "$(call FixPath,../$(STATA))" $(call FixPath,$(notdir $<)) > $*.expect.log
+	@$(CAT) tests/$*.expect.log
+
+tests/%: tests/%.do tests/%.expect.log
+	@echo -n "$<: "
+	@cd $(dir $<) && \
+	ADOPATH=$$(pwd)/../ "$(call FixPath,../$(STATA))" $(call FixPath,$(notdir $<)) > "$*.log" || ( $(CAT) "$*.log"; false )
+	@diff -u $(call FixPath,$@.expect.log) $(call FixPath,$@.log)
+	@echo passed
 
 # auto-wrap tests with the code in tests/helpers/
 # Stata doesn't pass command line arguments to batch scripts
@@ -76,12 +87,12 @@ tests/wrapped/%.do: tests/wrapped/ tests/helpers/settings.do tests/%.do
 	echo di _rc >> $(call FixPath,$@)
 	echo "shell echo "\`=_rc\'" > $*.out" >> $(call FixPath,$@)
 	echo exit, clear STATA >> $(call FixPath,$@)
-	
+
 # it's a bad idea to have directories as targets, but there's no cross-platform way to say "if directory already exists, don't make it";
 tests/wrapped/:
 	$(MKDIR) $(call FixPath,$@) 2>$(NULL)
 
-    
+
 #.INTERMEDIATE: $(patsubst test_%,%.log,$(TESTS)) # this is commented out because it breaks under Win32 gmake, causing the files to *not* be deleted at finish.
 
 
@@ -92,4 +103,5 @@ clean: clean-tests
 .PHONY: clean-tests
 clean-tests:
 	-$(RM) $(call FixPath,tests/*.model)
+	-$(RM) $(call FixPath,$(filter-out %.expect.log,$(wildcard tests/*.log)))
 	-$(RMDIR) $(call FixPath,tests/wrapped)
