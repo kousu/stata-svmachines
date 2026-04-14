@@ -18,23 +18,24 @@ Whenever you make a change, you need to make sure it is cross-compatible.
 In principle, the best way to do this is to use a testing branch that won't impinge on the main branch, perhaps `cross`. For example:
 ```
 # ..make changes...
-make test
+cd src/
+make tests
 git checkout [-b] cross
-git add -u ... && git commit 
+git add -u ... && git commit
 git push
 
 ssh OSX
-cd statasvm
+cd statasvm/src
 git checkout [-b] cross
-git pull 
-make test
+git pull
+make tests
 exit
 
 ssh Windows #or maybe rdesktop, or VNC
-cd statasvm
+cd statasvm/src
 git checkout [-b] cross
 git pull
-make test
+make tests
 exit
 
 # back on the original machine
@@ -56,14 +57,16 @@ See [COMPILE](COMPILE.md)
 Testing
 -------
 
-You can run the unit tests with, 
+You can run the unit tests with,
 ```
+$ cd src
 $ make tests
 ```
 but you will need Stata installed and activated for this, of course.
 
 You can also run specific tests by appending the basename of the testing .do file. For example
 ```
+$ cd src
 $ make tests/train
 ```
 will run `tests/train.do` in a harness that detects errors.

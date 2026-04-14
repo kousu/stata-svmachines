@@ -50,8 +50,8 @@ tests: $(TESTS)
 STATA:=../scripts/stata
 
 tests/%: tests/%.do
-	"$(call FixPath,$(STATA))" $(call FixPath,$<)
-  
+	cd $(dir $<) && ADOPATH=$$(pwd)/../ "$(call FixPath,../$(STATA))" $(call FixPath,$(notdir $<))
+
 # auto-wrap tests with the code in tests/helpers/
 # Stata doesn't pass command line arguments to batch scripts
 # *and* it doesn't let us control where stdout goes --- it insists on naming the output <basename>.log

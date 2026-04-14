@@ -1,0 +1,43 @@
+name: Lint
+
+on:
+  push:
+    branches: ["master"]
+    tags: ["*"]
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - '.github/workflows/lint.yml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - '.github/workflows/lint.yml'
+  workflow_dispatch: # manual trigger
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  clang-tidy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y clang-tidy
+          sudo apt-get install -y libsvm-dev
+
+      - name: Run clang-tidy
+        working-directory: src
+        run: |
+          clang-tidy \
+            --warnings-as-errors='*' \
+            $(find . -maxdepth 1 -name '*.c') \
+            -- \
+            -DSYSTEM=OPUNIX \
+            -std=gnu99 \
+            -fPIC \
+            -fdeclspec \
+            -I/usr/include/libsvm

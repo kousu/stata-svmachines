@@ -1,0 +1,9 @@
+lint:
+  image: ubuntu:latest
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y clang-tidy
+    - apt-get install -y libsvm-dev
+  script:
+    - cd src
+    - clang-tidy --warnings-as-errors='*' $(find . -maxdepth 1 -name '*.c') -- -DSYSTEM=OPUNIX -std=gnu99 -fPIC -fdeclspec -I/usr/include/libsvm

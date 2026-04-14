@@ -41,20 +41,27 @@ SCRIPT="$1"; shift
 WRAPPER=$(dirname $0)/stata_wrap.do
 
 # allocate a folder for stata_wrap to return data via
-if (mktemp --version 2>/dev/null | grep GNU); then
-  # GNU and 
+if (mktemp --version 2>/dev/null | grep coreutils) >/dev/null; then
   # Under GNU -p "" means use /tmp or other system-defined default
   CRUFT=$(mktemp -d -p "" "statawrap.XXXXXXXX")
 else
   # Assume BSD mktemp
   CRUFT=$(mktemp -d -t statawrap)
 fi
+trap 'rm -r "$CRUFT"' EXIT
 LOG="$CRUFT"/session.log
 RC="$CRUFT"/rc
 
+# -e is undocumented; it means 'do not log to stdout'
 $STATA -q -e do "$WRAPPER" "$SCRIPT" "$LOG" "$RC"
 
-cat $LOG
+# tail/head crop the unavoidable header/footer:
+#
+# . capture noisily do "`script'"
+# . quietly log close
+# .
+# .
+# end of do-file
+cat "$LOG" | tail -n +3 | head -n -4
 RC=$(cat "$RC")
-rm -r $CRUFT
-exit $RC
+exit "$RC"

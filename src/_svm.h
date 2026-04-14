@@ -10,7 +10,7 @@
 #endif
 
 
-extern struct svm_model* model;
+extern struct svm_model* model; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
 struct svm_problem* stata2libsvm();
 ST_retcode train(int argc, char* argv[]);
