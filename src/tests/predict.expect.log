@@ -1,0 +1,123 @@
+
+. * export.do
+. clear
+
+. sysuse auto
+(1978 Automobile Data)
+
+. svmachines foreign price-gear_ratio if !missing(rep78) in 41/60  /*train on some of the data; this range is chosen to
+>  cover 10 each of each kind of car*/
+
+. predict P in 50/70 /* test, on both part of the training and part of the testing data */
+
+. 
+. * fill in the rest and observe the error rate
+. * Stata convention (which predict enforces) is that we have to predict into a *new* variable
+. * (if we want to reuse the old one we have to drop it first; if we want to merge the results we need to make a second
+>  variable and then use ..other commands.. to do the merge)
+. predict P2
+
+. list foreign P P2
+
+     +--------------------------------+
+     |  foreign          P         P2 |
+     |--------------------------------|
+  1. | Domestic          .   Domestic |
+  2. | Domestic          .   Domestic |
+  3. | Domestic          .          . |
+  4. | Domestic          .   Domestic |
+  5. | Domestic          .   Domestic |
+     |--------------------------------|
+  6. | Domestic          .   Domestic |
+  7. | Domestic          .          . |
+  8. | Domestic          .   Domestic |
+  9. | Domestic          .   Domestic |
+ 10. | Domestic          .   Domestic |
+     |--------------------------------|
+ 11. | Domestic          .   Domestic |
+ 12. | Domestic          .   Domestic |
+ 13. | Domestic          .   Domestic |
+ 14. | Domestic          .   Domestic |
+ 15. | Domestic          .   Domestic |
+     |--------------------------------|
+ 16. | Domestic          .   Domestic |
+ 17. | Domestic          .   Domestic |
+ 18. | Domestic          .   Domestic |
+ 19. | Domestic          .   Domestic |
+ 20. | Domestic          .   Domestic |
+     |--------------------------------|
+ 21. | Domestic          .   Domestic |
+ 22. | Domestic          .   Domestic |
+ 23. | Domestic          .   Domestic |
+ 24. | Domestic          .   Domestic |
+ 25. | Domestic          .   Domestic |
+     |--------------------------------|
+ 26. | Domestic          .   Domestic |
+ 27. | Domestic          .   Domestic |
+ 28. | Domestic          .   Domestic |
+ 29. | Domestic          .   Domestic |
+ 30. | Domestic          .   Domestic |
+     |--------------------------------|
+ 31. | Domestic          .   Domestic |
+ 32. | Domestic          .   Domestic |
+ 33. | Domestic          .   Domestic |
+ 34. | Domestic          .   Domestic |
+ 35. | Domestic          .   Domestic |
+     |--------------------------------|
+ 36. | Domestic          .   Domestic |
+ 37. | Domestic          .   Domestic |
+ 38. | Domestic          .   Domestic |
+ 39. | Domestic          .   Domestic |
+ 40. | Domestic          .   Domestic |
+     |--------------------------------|
+ 41. | Domestic          .   Domestic |
+ 42. | Domestic          .   Domestic |
+ 43. | Domestic          .   Domestic |
+ 44. | Domestic          .   Domestic |
+ 45. | Domestic          .          . |
+     |--------------------------------|
+ 46. | Domestic          .   Domestic |
+ 47. | Domestic          .   Domestic |
+ 48. | Domestic          .   Domestic |
+ 49. | Domestic          .   Domestic |
+ 50. | Domestic   Domestic   Domestic |
+     |--------------------------------|
+ 51. | Domestic          .          . |
+ 52. | Domestic   Domestic   Domestic |
+ 53. |  Foreign    Foreign    Foreign |
+ 54. |  Foreign    Foreign    Foreign |
+ 55. |  Foreign    Foreign    Foreign |
+     |--------------------------------|
+ 56. |  Foreign    Foreign    Foreign |
+ 57. |  Foreign    Foreign    Foreign |
+ 58. |  Foreign    Foreign    Foreign |
+ 59. |  Foreign    Foreign    Foreign |
+ 60. |  Foreign    Foreign    Foreign |
+     |--------------------------------|
+ 61. |  Foreign   Domestic   Domestic |
+ 62. |  Foreign   Domestic   Domestic |
+ 63. |  Foreign   Domestic   Domestic |
+ 64. |  Foreign          .          . |
+ 65. |  Foreign   Domestic   Domestic |
+     |--------------------------------|
+ 66. |  Foreign   Domestic   Domestic |
+ 67. |  Foreign   Domestic   Domestic |
+ 68. |  Foreign   Domestic   Domestic |
+ 69. |  Foreign   Domestic   Domestic |
+ 70. |  Foreign   Domestic   Domestic |
+     |--------------------------------|
+ 71. |  Foreign          .   Domestic |
+ 72. |  Foreign          .   Domestic |
+ 73. |  Foreign          .   Domestic |
+ 74. |  Foreign          .   Domestic |
+     +--------------------------------+
+
+. generate error = abs(foreign != P2)
+
+. summarize error
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       error |         74    .2432432    .4319694          0          1
+
+. 
